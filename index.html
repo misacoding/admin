@@ -1,0 +1,1569 @@
+<!-- man html compilers have saved me
+that copy paste button looks very very interesting rn
+visual studio code lowkey the goat but online compilers are decent too ig  -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MINISTRY OF ADMINISTRATION — PERSONNEL DOSSIERS</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #c0392b;
+    --dark-red: #7b241c;
+    --cream: #f0e6d3;
+    --paper: #e8dcc8;
+    --ink: #1a1208;
+    --stamp: #8b1a1a;
+    --faded: #b8a89a;
+    --black: #0d0a06;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--black);
+    background-image: 
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.015) 2px, rgba(255,255,255,0.015) 4px),
+      radial-gradient(ellipse at 50% 0%, #1a0a0a 0%, var(--black) 70%);
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--cream);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* SCANLINE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0,0,0,0.08) 0px,
+      rgba(0,0,0,0.08) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  .page-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  /* HEADER */
+  .ministry-header {
+    text-align: center;
+    border: 2px solid var(--red);
+    border-top: 6px solid var(--red);
+    padding: 30px 20px 24px;
+    margin-bottom: 10px;
+    position: relative;
+    background: linear-gradient(180deg, rgba(192,57,43,0.08) 0%, transparent 40%);
+  }
+
+  .ministry-header::before {
+    content: '▲ CLASSIFIED ▲';
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--black);
+    color: var(--red);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    padding: 0 12px;
+  }
+
+  .ministry-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(28px, 6vw, 56px);
+    letter-spacing: 8px;
+    color: var(--cream);
+    text-shadow: 0 0 30px rgba(192,57,43,0.4);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .ministry-subtitle {
+    font-size: 10px;
+    letter-spacing: 5px;
+    color: var(--faded);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .ministry-decree {
+    font-family: 'Special Elite', cursive;
+    font-size: 13px;
+    color: var(--faded);
+    font-style: italic;
+    border-top: 1px solid rgba(192,57,43,0.3);
+    padding-top: 14px;
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .doc-number {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: rgba(192,57,43,0.5);
+    margin-top: 8px;
+  }
+
+  /* TICKER */
+  .ticker-bar {
+    background: var(--red);
+    padding: 7px 0;
+    overflow: hidden;
+    margin-bottom: 40px;
+    position: relative;
+  }
+
+  .ticker-bar::before,
+  .ticker-bar::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 40px;
+    z-index: 2;
+  }
+  .ticker-bar::before { left: 0; background: linear-gradient(90deg, var(--red), transparent); }
+  .ticker-bar::after { right: 0; background: linear-gradient(-90deg, var(--red), transparent); }
+
+  .ticker-track {
+    display: flex;
+    animation: ticker 25s linear infinite;
+    white-space: nowrap;
+  }
+
+  .ticker-track span {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(0,0,0,0.7);
+    padding: 0 30px;
+    font-weight: bold;
+  }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 6px;
+    color: var(--red);
+    text-align: center;
+    margin-bottom: 32px;
+    position: relative;
+  }
+
+  .section-label::before,
+  .section-label::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 30%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(192,57,43,0.4));
+  }
+  .section-label::before { left: 0; }
+  .section-label::after { right: 0; transform: scaleX(-1); }
+
+  /* ADMIN CARDS GRID */
+  .admins-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 60px;
+  }
+
+  .admin-card {
+    background: var(--paper);
+    color: var(--ink);
+    position: relative;
+    padding: 0;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid rgba(0,0,0,0.2);
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.4), 0 0 0 1px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .admin-card:hover {
+    transform: translateY(-3px) rotate(0.3deg);
+    box-shadow: 7px 7px 0 rgba(0,0,0,0.5);
+  }
+
+  /* Aged paper texture */
+  .admin-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse at 10% 90%, rgba(139,90,43,0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 10%, rgba(139,90,43,0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .card-header {
+    background: var(--ink);
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-header-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--red);
+  }
+
+  .card-header-id {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    color: rgba(240,230,211,0.4);
+    letter-spacing: 2px;
+  }
+
+  .card-photo-area {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+    background: #2a2018;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card-photo-area img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: sepia(40%) contrast(1.05) brightness(0.95);
+    display: block;
+  }
+
+  .photo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: repeating-linear-gradient(
+      45deg,
+      #1a1208,
+      #1a1208 10px,
+      #221a0e 10px,
+      #221a0e 20px
+    );
+  }
+
+  .photo-placeholder span {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: rgba(240,230,211,0.3);
+  }
+
+  .photo-placeholder-icon {
+    font-size: 48px;
+    opacity: 0.15;
+  }
+
+  .status-stamp {
+    position: absolute;
+    top: 12px;
+    right: -8px;
+    background: var(--stamp);
+    color: rgba(255,255,255,0.9);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    padding: 4px 16px 4px 12px;
+    transform: rotate(3deg);
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.4);
+    z-index: 2;
+  }
+
+  .card-body {
+    padding: 16px 16px 18px;
+    position: relative;
+    z-index: 2;
+    flex: 1;
+  }
+
+  .admin-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 3px;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .admin-role {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--stamp);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(0,0,0,0.15);
+    padding-bottom: 10px;
+  }
+
+  .admin-desc {
+    font-family: 'Special Elite', cursive;
+    font-size: 13px;
+    color: #3a2e1e;
+    line-height: 1.7;
+  }
+
+  .card-footer {
+    padding: 10px 16px;
+    border-top: 1px dashed rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0,0,0,0.04);
+  }
+
+  .card-footer-text {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: rgba(58,46,30,0.5);
+  }
+
+  .threat-level {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--stamp);
+    font-weight: bold;
+  }
+
+  /* ===================== */
+  /* THE SECRET ELEMENT    */
+  /* ===================== */
+  .ministry-seal {
+    display: block;
+    margin: 0 auto 50px;
+    width: 90px;
+    height: 90px;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.3s ease;
+    user-select: none;
+  }
+
+  .ministry-seal:hover {
+    transform: scale(1.05) rotate(-2deg);
+  }
+
+  .ministry-seal svg {
+    width: 100%;
+    height: 100%;
+    opacity: 0.35;
+    transition: opacity 0.4s ease, filter 0.4s ease;
+    filter: drop-shadow(0 0 0px var(--red));
+  }
+
+  .ministry-seal:hover svg {
+    opacity: 0.7;
+    filter: drop-shadow(0 0 12px var(--red));
+  }
+
+  .ministry-seal .click-hint {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 8px;
+    letter-spacing: 3px;
+    color: rgba(192,57,43,0);
+    white-space: nowrap;
+    transition: color 0.4s ease;
+  }
+
+  .ministry-seal:hover .click-hint {
+    color: rgba(192,57,43,0.4);
+  }
+
+  /* CLUE MODAL */
+  .clue-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+
+  .clue-overlay.active {
+    display: flex;
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .clue-box {
+    background: var(--paper);
+    color: var(--ink);
+    max-width: 480px;
+    width: 90%;
+    padding: 0;
+    position: relative;
+    box-shadow: 0 0 60px rgba(192,57,43,0.3), 8px 8px 0 rgba(0,0,0,0.5);
+    animation: slideUp 0.4s ease;
+    border: 1px solid rgba(0,0,0,0.3);
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .clue-box-header {
+    background: var(--ink);
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .clue-box-header span {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--red);
+  }
+
+  .clue-close {
+    background: none;
+    border: 1px solid rgba(192,57,43,0.4);
+    color: var(--faded);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .clue-close:hover {
+    background: var(--red);
+    color: white;
+    border-color: var(--red);
+  }
+
+  .clue-box-body {
+    padding: 30px 28px 20px;
+  }
+
+  .clue-eyebrow {
+    font-size: 9px;
+    letter-spacing: 5px;
+    color: var(--stamp);
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .clue-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 4px;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .clue-divider {
+    height: 1px;
+    background: linear-gradient(90deg, var(--stamp), transparent);
+    margin-bottom: 20px;
+  }
+
+  .clue-text {
+    font-family: 'Special Elite', cursive;
+    font-size: 14px;
+    color: #3a2e1e;
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+
+  .clue-text .clue-highlight {
+    background: rgba(192,57,43,0.15);
+    padding: 2px 6px;
+    border-left: 2px solid var(--stamp);
+    font-style: italic;
+    display: block;
+    margin: 12px 0;
+  }
+
+  .clue-box-footer {
+    padding: 14px 28px;
+    border-top: 1px dashed rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.04);
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: rgba(58,46,30,0.45);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* FOOTER */
+  .page-footer {
+    text-align: center;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: rgba(192,57,43,0.25);
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(192,57,43,0.1);
+  }
+
+  /* FLICKER ANIMATION */
+  @keyframes flicker {
+    0%, 95%, 100% { opacity: 1; }
+    96% { opacity: 0.7; }
+    97% { opacity: 1; }
+    98% { opacity: 0.6; }
+    99% { opacity: 1; }
+  }
+
+  .ministry-title {
+    animation: flicker 8s infinite;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- HEADER -->
+  <header class="ministry-header">
+    <div class="ministry-title">MEET THE ADMINS</div>
+    <div class="ministry-subtitle">Ministry of Administration — Personnel Dossiers — Internal Use Only</div>
+    <p class="ministry-decree">
+      "All administrators serve the community. All administrators are loyal. 
+      All administrators are watching."
+    </p>
+    <div class="doc-number">DOC-REF: MIN/ADM/2024 — ACCESS LEVEL: COMMUNITY</div>
+  </header>
+
+  <!-- TICKER -->
+  <div class="ticker-bar">
+    <div class="ticker-track">
+      <span>LOYALTY IS MANDATORY</span>
+      <span>•</span>
+      <span>THE COMMUNITY ENDURES</span>
+      <span>•</span>
+      <span>REPORT SUSPICIOUS ACTIVITY</span>
+      <span>•</span>
+      <span>DOUBT IS DISCOURAGED</span>
+      <span>•</span>
+      <span>THE ADMINS PROVIDE</span>
+      <span>•</span>
+      <span>LOYALTY IS MANDATORY</span>
+      <span>•</span>
+      <span>THE COMMUNITY ENDURES</span>
+      <span>•</span>
+      <span>REPORT SUSPICIOUS ACTIVITY</span>
+      <span>•</span>
+      <span>DOUBT IS DISCOURAGED</span>
+      <span>•</span>
+      <span>THE ADMINS PROVIDE</span>
+      <span>•</span>
+    </div>
+  </div>
+
+  <!-- SECTION LABEL -->
+  <div class="section-label">APPROVED PERSONNEL — CYCLE 2024</div>
+
+  <!-- ADMIN CARDS -->
+  <div class="admins-grid">
+
+    <!-- DIEGO — OWNER -->
+    <div class="admin-card">
+      <div class="card-header">
+        <span class="card-header-label">DOSSIER</span>
+        <span class="card-header-id">ADM-000</span>
+      </div>
+      <div class="card-photo-area">
+        <img src="https://i.imgur.com/ABQRLyL.png" alt="Diego">
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(139,26,26,0.15) 0%,rgba(0,0,0,0.35) 100%);pointer-events:none;z-index:1;"></div>
+        <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0.03) 0px,rgba(0,0,0,0.03) 1px,transparent 1px,transparent 3px);pointer-events:none;z-index:2;"></div>
+        <div class="status-stamp" style="background:#8b6914; color:#fff8e1; letter-spacing:2px; z-index:3;">👑 OWNER</div>
+      </div>
+      <div class="card-body">
+        <div class="admin-name">DIEGO</div>
+        <div class="admin-role">Supreme Owner — Founder of the Regime</div>
+        <p class="admin-desc">The one who controls it all. Whether that's a good idea remains classified, considering the state of the union.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-text">JOINED: ████</span>
+        <span class="threat-level">CLEARANCE: ██</span>
+      </div>
+    </div>
+
+    <!-- MISA — DICTATOR -->
+    <div class="admin-card">
+      <div class="card-header">
+        <span class="card-header-label">DOSSIER</span>
+        <span class="card-header-id">ADM-001</span>
+      </div>
+      <div class="card-photo-area">
+        <img src="https://i.imgur.com/SBczlCs.png" alt="Misa">
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(139,26,26,0.15) 0%,rgba(0,0,0,0.35) 100%);pointer-events:none;z-index:1;"></div>
+        <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0.03) 0px,rgba(0,0,0,0.03) 1px,transparent 1px,transparent 3px);pointer-events:none;z-index:2;"></div>
+        <div class="status-stamp" style="background:#1a1208; color: var(--red); z-index:3;">DICTATOR</div>
+      </div>
+      <div class="card-body">
+        <div class="admin-name">MISA</div>
+        <div class="admin-role">Supreme Administrator</div>
+        <p class="admin-desc">Sometimes author, sometimes administrative horror. Ensure that her polls are answered to remain in her good graces.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-text">JOINED: ████</span>
+        <span class="threat-level">CLEARANCE: ██</span>
+      </div>
+    </div>
+
+    <!-- DON — DON QUIXOTE -->
+    <div class="admin-card">
+      <div class="card-header">
+        <span class="card-header-label">DOSSIER</span>
+        <span class="card-header-id">ADM-002</span>
+      </div>
+      <div class="card-photo-area">
+        <img src="https://i.imgur.com/7EgI0oC.jpeg" alt="Don Quixote">
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(139,26,26,0.15) 0%,rgba(0,0,0,0.35) 100%);pointer-events:none;z-index:1;"></div>
+        <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0.03) 0px,rgba(0,0,0,0.03) 1px,transparent 1px,transparent 3px);pointer-events:none;z-index:2;"></div>
+        <div class="status-stamp" style="z-index:3;">DE LA MANCHA</div>
+      </div>
+      <div class="card-body">
+        <div class="admin-name">DON QUIXOTE</div>
+        <div class="admin-role">Knight-Errant of the Community</div>
+        <p class="admin-desc"><em style="font-size:13px; opacity:0.6; color: var(--stamp);">"Maddest of all — to see life as it is, and not as it should be."</em> — Don Quixote</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-text">JOINED: ████</span>
+        <span class="threat-level">CLEARANCE: ██</span>
+      </div>
+    </div>
+
+    <!-- ADAM — NEWLY RECRUITED -->
+    <div class="admin-card">
+      <div class="card-header">
+        <span class="card-header-label">DOSSIER</span>
+        <span class="card-header-id">ADM-003</span>
+      </div>
+      <div class="card-photo-area">
+        <img src="https://i.imgur.com/C3P3Hv0.png" alt="Adam">
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(139,26,26,0.15) 0%,rgba(0,0,0,0.35) 100%);pointer-events:none;z-index:1;"></div>
+        <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0.03) 0px,rgba(0,0,0,0.03) 1px,transparent 1px,transparent 3px);pointer-events:none;z-index:2;"></div>
+        <div class="status-stamp" style="background:#1a3a1a; color:#90ee90; z-index:3;">NEWLY RECRUITED</div>
+      </div>
+      <div class="card-body">
+        <div class="admin-name">ADAM</div>
+        <div class="admin-role">Probationary Administrator</div>
+        <p class="admin-desc">New to the ranks, but do not mistake that for leniency. Vigilant, observant, and already taking notes. The regime chose wisely.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-text">JOINED: ████</span>
+        <span class="threat-level">CLEARANCE: ██</span>
+      </div>
+    </div>
+
+    <!-- JUAN — LOCAL SPIDERMAN -->
+    <div class="admin-card">
+      <div class="card-header">
+        <span class="card-header-label">DOSSIER</span>
+        <span class="card-header-id">ADM-004</span>
+      </div>
+      <div class="card-photo-area">
+        <img src="https://i.imgur.com/GQrQUje.jpeg" alt="Juan">
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(139,26,26,0.15) 0%,rgba(0,0,0,0.35) 100%);pointer-events:none;z-index:1;"></div>
+        <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0.03) 0px,rgba(0,0,0,0.03) 1px,transparent 1px,transparent 3px);pointer-events:none;z-index:2;"></div>
+        <div class="status-stamp" style="background:#1a1a3a; color:#6495ed; z-index:3;">CHAOS COORDINATOR</div>
+      </div>
+      <div class="card-body">
+        <div class="admin-name">JUAN</div>
+        <div class="admin-role">Administrator</div>
+        <p class="admin-desc">With great power comes great responsibility. He takes both very seriously — especially when it comes to campus gum and snack distribution.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-text">JOINED: ████</span>
+        <span class="threat-level">CLEARANCE: ██</span>
+      </div>
+    </div>
+
+    <!-- LIGHT — ACTIVE -->
+    <div class="admin-card">
+      <div class="card-header">
+        <span class="card-header-label">DOSSIER</span>
+        <span class="card-header-id">ADM-005</span>
+      </div>
+      <div class="card-photo-area">
+        <img src="https://i.imgur.com/sgOsn66.jpeg" alt="Light">
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(139,26,26,0.15) 0%,rgba(0,0,0,0.35) 100%);pointer-events:none;z-index:1;"></div>
+        <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0.03) 0px,rgba(0,0,0,0.03) 1px,transparent 1px,transparent 3px);pointer-events:none;z-index:2;"></div>
+        <div class="status-stamp" style="background:#0d0d1a; color:#b8b8ff; z-index:3;">YAGAMI</div>
+      </div>
+      <div class="card-body">
+        <div class="admin-name">LIGHT</div>
+        <div class="admin-role">Administrator</div>
+        <p class="admin-desc"><em style="font-size:13px; color:#0d0d1a;">"If we catch Kira, he is evil. If he rules the world, he is justice."</em> — Yagami Light</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-text">JOINED: ████</span>
+        <span class="threat-level">CLEARANCE: ██</span>
+      </div>
+    </div>
+
+    <!-- RAFAEL — ACTIVE -->
+    <div class="admin-card">
+      <div class="card-header">
+        <span class="card-header-label">DOSSIER</span>
+        <span class="card-header-id">ADM-006</span>
+      </div>
+      <div class="card-photo-area">
+        <img src="https://i.imgur.com/etmHUwS.jpeg" alt="Rafael">
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(139,26,26,0.15) 0%,rgba(0,0,0,0.35) 100%);pointer-events:none;z-index:1;"></div>
+        <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0.03) 0px,rgba(0,0,0,0.03) 1px,transparent 1px,transparent 3px);pointer-events:none;z-index:2;"></div>
+        <div class="status-stamp" style="background:#1a3a1a; color:#90ee90; font-size:8px; letter-spacing:1px; z-index:3;">FOOTBALL'S HEARTBREAKER</div>
+      </div>
+      <div class="card-body">
+        <div class="admin-name">RAFAEL</div>
+        <div class="admin-role">Administrator</div>
+        <p class="admin-desc">Present. Accounted for. Loyal to the regime.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-text">JOINED: ████</span>
+        <span class="threat-level">CLEARANCE: ██</span>
+      </div>
+    </div>
+
+    <!-- SEBASTIAN — ACTIVE -->
+    <div class="admin-card">
+      <div class="card-header">
+        <span class="card-header-label">DOSSIER</span>
+        <span class="card-header-id">ADM-007</span>
+      </div>
+      <div class="card-photo-area">
+        <img src="https://i.imgur.com/cjhcVHw.png" alt="Sebastian">
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(139,26,26,0.15) 0%,rgba(0,0,0,0.35) 100%);pointer-events:none;z-index:1;"></div>
+        <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0.03) 0px,rgba(0,0,0,0.03) 1px,transparent 1px,transparent 3px);pointer-events:none;z-index:2;"></div>
+        <div class="status-stamp" style="z-index:3;">ACTIVE</div>
+      </div>
+      <div class="card-body">
+        <div class="admin-name">SEBASTIAN</div>
+        <div class="admin-role">Administrator</div>
+        <p class="admin-desc">Present. Accounted for. Loyal to the regime.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-text">JOINED: ████</span>
+        <span class="threat-level">CLEARANCE: ██</span>
+      </div>
+    </div>
+
+    <!-- MATITI — ACTIVE -->
+    <div class="admin-card">
+      <div class="card-header">
+        <span class="card-header-label">DOSSIER</span>
+        <span class="card-header-id">ADM-008</span>
+      </div>
+      <div class="card-photo-area">
+        <img src="https://i.imgur.com/wIGoeNJ.jpeg" alt="Matiti">
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(139,26,26,0.15) 0%,rgba(0,0,0,0.35) 100%);pointer-events:none;z-index:1;"></div>
+        <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0.03) 0px,rgba(0,0,0,0.03) 1px,transparent 1px,transparent 3px);pointer-events:none;z-index:2;"></div>
+        <div class="status-stamp" style="background:#1a2e0d; color:#aaff66; z-index:3;">SHOYA ISHIDA</div>
+      </div>
+      <div class="card-body">
+        <div class="admin-name">MATITI</div>
+        <div class="admin-role">Administrator</div>
+        <p class="admin-desc">The esteemed pickle consumer. Also runs a custom t-shirt business — enquire within, loyalty discounts may apply.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-text">JOINED: ████</span>
+        <span class="threat-level">CLEARANCE: ██</span>
+      </div>
+    </div>
+
+    <!-- ALEJANDRO — ACTIVE -->
+    <div class="admin-card">
+      <div class="card-header">
+        <span class="card-header-label">DOSSIER</span>
+        <span class="card-header-id">ADM-009</span>
+      </div>
+      <div class="card-photo-area">
+        <img src="https://i.imgur.com/a4RVytS.png" alt="Alejandro">
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(139,26,26,0.15) 0%,rgba(0,0,0,0.35) 100%);pointer-events:none;z-index:1;"></div>
+        <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,0.03) 0px,rgba(0,0,0,0.03) 1px,transparent 1px,transparent 3px);pointer-events:none;z-index:2;"></div>
+        <div class="status-stamp" style="background:#2a1a0d; color:#d4a96a; z-index:3;">MUSHROOM</div>
+      </div>
+      <div class="card-body">
+        <div class="admin-name">ALEJANDRO</div>
+        <div class="admin-role">Administrator</div>
+        <p class="admin-desc">Present. Accounted for. Loyal to the regime.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-text">JOINED: ████</span>
+        <span class="threat-level">CLEARANCE: ██</span>
+      </div>
+    </div>
+
+  <!-- BLOG PANEL — inside grid, spans 2 columns -->
+  <div style="grid-column: span 2; background:var(--paper); border:1px solid rgba(0,0,0,0.2); box-shadow:4px 4px 0 rgba(0,0,0,0.4); display:flex; flex-direction:column; overflow:hidden; max-height:420px; align-self:start;">
+    <div style="background:var(--ink); padding:10px 14px; display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
+      <span style="font-size:9px; letter-spacing:4px; color:var(--red);">ADMIN BROADCAST</span>
+      <span style="font-size:8px; letter-spacing:2px; color:rgba(240,230,211,0.3);">● LIVE</span>
+    </div>
+    <div style="overflow-y:auto; flex:1; padding:12px; display:flex; flex-direction:column; gap:12px;">
+ 
+      <!-- MISA -->
+      <div style="border-bottom:1px dashed rgba(0,0,0,0.15); padding-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <img src="https://i.imgur.com/SBczlCs.png" style="width:28px;height:28px;object-fit:cover;border-radius:50%;border:1px solid rgba(192,57,43,0.5);filter:sepia(30%);">
+          <div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:2px; color:var(--ink);">Misa</div>
+            <div style="font-size:8px; letter-spacing:2px; color:var(--stamp);">DICTATOR</div>
+          </div>
+        </div>
+        <p style="font-family:'Special Elite',cursive; font-size:12px; color:#3a2e1e; line-height:1.6;">having fun with the arg, esteemed participants?</p>
+      </div>
+ 
+      <!-- JUAN -->
+      <div style="border-bottom:1px dashed rgba(0,0,0,0.15); padding-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <img src="https://i.imgur.com/GQrQUje.jpeg" style="width:28px;height:28px;object-fit:cover;border-radius:50%;border:1px solid rgba(26,26,58,0.5);filter:sepia(30%);">
+          <div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:2px; color:var(--ink);">Juan</div>
+            <div style="font-size:8px; letter-spacing:2px; color:#6495ed;">CHAOS COORDINATOR</div>
+          </div>
+        </div>
+        <p style="font-family:'Special Elite',cursive; font-size:12px; color:#3a2e1e; line-height:1.6;">gum restock tmrw. dm if you want to buy.</p>
+      </div>
+ 
+      <!-- DON -->
+      <div style="border-bottom:1px dashed rgba(0,0,0,0.15); padding-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <img src="https://i.imgur.com/7EgI0oC.jpeg" style="width:28px;height:28px;object-fit:cover;border-radius:50%;border:1px solid rgba(0,0,0,0.2);filter:sepia(30%);">
+          <div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:2px; color:var(--ink);">Don Quixote</div>
+            <div style="font-size:8px; letter-spacing:2px; color:var(--stamp);">DE LA MANCHA</div>
+          </div>
+        </div>
+        <p style="font-family:'Special Elite',cursive; font-size:12px; color:#3a2e1e; line-height:1.6;"><em>"until death, it is all life."</em> he understood something the rest of us don't.</p>
+      </div>
+ 
+      <!-- RAFAEL -->
+      <div style="border-bottom:1px dashed rgba(0,0,0,0.15); padding-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <img src="https://i.imgur.com/etmHUwS.jpeg" style="width:28px;height:28px;object-fit:cover;border-radius:50%;border:1px solid rgba(26,58,26,0.4);filter:sepia(30%);">
+          <div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:2px; color:var(--ink);">Rafael</div>
+            <div style="font-size:8px; letter-spacing:2px; color:#90ee90;">FOOTBALL'S HEARTBREAKER</div>
+          </div>
+        </div>
+        <p style="font-family:'Special Elite',cursive; font-size:12px; color:#3a2e1e; line-height:1.6;">we were robbed. I don't want to talk about it.</p>
+      </div>
+ 
+      <!-- MATITI -->
+      <div style="border-bottom:1px dashed rgba(0,0,0,0.15); padding-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <img src="https://i.imgur.com/wIGoeNJ.jpeg" style="width:28px;height:28px;object-fit:cover;border-radius:50%;border:1px solid rgba(26,46,13,0.5);filter:sepia(30%);">
+          <div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:2px; color:var(--ink);">Matiti</div>
+            <div style="font-size:8px; letter-spacing:2px; color:#aaff66;">SHOYA ISHIDA</div>
+          </div>
+        </div>
+        <p style="font-family:'Special Elite',cursive; font-size:12px; color:#3a2e1e; line-height:1.6;">anyone up for rocket league?</p>
+      </div>
+ 
+      <!-- DIEGO — BURIED IN THE MIDDLE, GLOWS ON HOVER -->
+      <div class="diego-post" style="border-bottom:1px dashed rgba(0,0,0,0.15); padding-bottom:12px; border-radius:2px; transition: box-shadow 0.3s ease, background 0.3s ease; padding:8px; margin:-8px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <img src="https://i.imgur.com/ABQRLyL.png" style="width:28px;height:28px;object-fit:cover;border-radius:50%;border:1px solid rgba(139,106,20,0.5);filter:sepia(30%);">
+          <div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:2px; color:var(--ink);">Diego</div>
+            <div style="font-size:8px; letter-spacing:2px; color:#8b6914;">👑 OWNER</div>
+          </div>
+        </div>
+        <p style="font-family:'Special Elite',cursive; font-size:12px; color:#3a2e1e; line-height:1.6;">Special thanks to our school. If it wasn't conceived, this project would not be possible.</p>
+      </div>
+ 
+      <!-- ADAM -->
+      <div style="border-bottom:1px dashed rgba(0,0,0,0.15); padding-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <img src="https://i.imgur.com/C3P3Hv0.png" style="width:28px;height:28px;object-fit:cover;border-radius:50%;border:1px solid rgba(26,58,26,0.5);filter:sepia(30%);">
+          <div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:2px; color:var(--ink);">Adam</div>
+            <div style="font-size:8px; letter-spacing:2px; color:#3a8a3a;">NEWLY RECRUITED</div>
+          </div>
+        </div>
+        <p style="font-family:'Special Elite',cursive; font-size:12px; color:#3a2e1e; line-height:1.6;">Please read the pinned message. Any thoughts on my latest suggestion?</p>
+      </div>
+ 
+      <!-- LIGHT -->
+      <div style="border-bottom:1px dashed rgba(0,0,0,0.15); padding-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <img src="https://i.imgur.com/sgOsn66.jpeg" style="width:28px;height:28px;object-fit:cover;border-radius:50%;border:1px solid rgba(13,13,26,0.5);filter:sepia(30%);">
+          <div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:2px; color:var(--ink);">Light</div>
+            <div style="font-size:8px; letter-spacing:2px; color:#b8b8ff;">YAGAMI</div>
+          </div>
+        </div>
+        <p style="font-family:'Special Elite',cursive; font-size:12px; color:#3a2e1e; line-height:1.6;">I already know who you are. I've known for a while.</p>
+      </div>
+ 
+      <!-- DON 2nd POST -->
+      <div style="border-bottom:1px dashed rgba(0,0,0,0.15); padding-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <img src="https://i.imgur.com/7EgI0oC.jpeg" style="width:28px;height:28px;object-fit:cover;border-radius:50%;border:1px solid rgba(0,0,0,0.2);filter:sepia(30%);">
+          <div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:2px; color:var(--ink);">Don Quixote</div>
+            <div style="font-size:8px; letter-spacing:2px; color:var(--stamp);">DE LA MANCHA</div>
+          </div>
+        </div>
+        <p style="font-family:'Special Elite',cursive; font-size:12px; color:#3a2e1e; line-height:1.6;">does anyone else feel like they were born in the wrong era or is that just me</p>
+      </div>
+ 
+      <!-- SEBASTIAN -->
+      <div style="border-bottom:1px dashed rgba(0,0,0,0.15); padding-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <img src="https://i.imgur.com/cjhcVHw.png" style="width:28px;height:28px;object-fit:cover;border-radius:50%;border:1px solid rgba(0,0,0,0.2);filter:sepia(30%);">
+          <div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:2px; color:var(--ink);">Sebastian</div>
+            <div style="font-size:8px; letter-spacing:2px; color:var(--stamp);">ACTIVE</div>
+          </div>
+        </div>
+        <p style="font-family:'Special Elite',cursive; font-size:12px; color:#3a2e1e; line-height:1.6;">has anyone seen my charger. asking for a friend (me)</p>
+      </div>
+ 
+      <!-- MATITI 2nd POST -->
+      <div style="border-bottom:1px dashed rgba(0,0,0,0.15); padding-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <img src="https://i.imgur.com/wIGoeNJ.jpeg" style="width:28px;height:28px;object-fit:cover;border-radius:50%;border:1px solid rgba(26,46,13,0.5);filter:sepia(30%);">
+          <div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:2px; color:var(--ink);">Matiti</div>
+            <div style="font-size:8px; letter-spacing:2px; color:#aaff66;">SHOYA ISHIDA</div>
+          </div>
+        </div>
+        <p style="font-family:'Special Elite',cursive; font-size:12px; color:#3a2e1e; line-height:1.6;">i despise math. who put letters into algebra?</p>
+      </div>
+ 
+      <!-- ALEJANDRO -->
+      <div style="padding-bottom:4px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <img src="https://i.imgur.com/a4RVytS.png" style="width:28px;height:28px;object-fit:cover;border-radius:50%;border:1px solid rgba(42,26,13,0.5);filter:sepia(30%);">
+          <div>
+            <div style="font-family:'Bebas Neue',sans-serif; font-size:13px; letter-spacing:2px; color:var(--ink);">Alejandro</div>
+            <div style="font-size:8px; letter-spacing:2px; color:#d4a96a;">MUSHROOM</div>
+          </div>
+        </div>
+        <p style="font-family:'Special Elite',cursive; font-size:12px; color:#3a2e1e; line-height:1.6;">found a really good mushroom spot near the science block. not telling.</p>
+      </div>
+ 
+    </div>
+  </div><!-- end blog panel, still inside grid -->
+
+  </div><!-- end admins-grid -->
+  <!-- APPEALS FORM -->
+  <div class="section-label" style="margin-top: 60px;">CITIZEN APPEALS — FORM MIN/APP/7</div>
+
+  <div style="background: var(--paper); color: var(--ink); padding: 28px; box-shadow: 4px 4px 0 rgba(0,0,0,0.4); border: 1px solid rgba(0,0,0,0.2); margin-bottom: 24px; position: relative;">
+    <div style="position:absolute; top: -1px; left: 0; right: 0; height: 4px; background: var(--red);"></div>
+    <div style="font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:4px; color:var(--ink); margin-bottom:4px;">APPEAL TO THE REGIME</div>
+    <div style="font-size:9px; letter-spacing:3px; color:var(--stamp); margin-bottom:20px;">ALL APPEALS ARE REVIEWED. ALL APPEALS ARE REJECTED.</div>
+
+    <div style="display:grid; gap:14px;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+        <div>
+          <label style="font-size:9px; letter-spacing:3px; color:var(--stamp); display:block; margin-bottom:6px;">CITIZEN NAME</label>
+          <input type="text" placeholder="Your designation..." style="width:100%; background:rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.2); border-bottom: 2px solid rgba(139,26,26,0.4); padding:8px 10px; font-family:'Share Tech Mono',monospace; font-size:12px; color:var(--ink); outline:none;">
+        </div>
+        <div>
+          <label style="font-size:9px; letter-spacing:3px; color:var(--stamp); display:block; margin-bottom:6px;">COMPLAINT REF NO.</label>
+          <input type="text" placeholder="Leave blank if uncertain..." style="width:100%; background:rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.2); border-bottom: 2px solid rgba(139,26,26,0.4); padding:8px 10px; font-family:'Share Tech Mono',monospace; font-size:12px; color:var(--ink); outline:none;">
+        </div>
+      </div>
+      <div>
+        <label style="font-size:9px; letter-spacing:3px; color:var(--stamp); display:block; margin-bottom:6px;">NATURE OF APPEAL</div>
+        <textarea placeholder="Describe your grievance. Be concise. Be loyal." rows="3" style="width:100%; background:rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.2); border-bottom: 2px solid rgba(139,26,26,0.4); padding:8px 10px; font-family:'Share Tech Mono',monospace; font-size:12px; color:var(--ink); outline:none; resize:none;"></textarea>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <div id="appealResponse" style="font-family:'Special Elite',cursive; font-size:13px; color:var(--stamp); font-style:italic; min-height:20px;"></div>
+        <button onclick="submitAppeal()" style="background:var(--ink); color:var(--cream); border:none; font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:3px; padding:10px 24px; cursor:pointer; transition: background 0.2s;">SUBMIT APPEAL ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPORT A CITIZEN -->
+  <div style="background: rgba(192,57,43,0.06); border: 1px solid rgba(192,57,43,0.2); padding: 20px 28px; margin-bottom: 60px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-bottom: 16px;">
+      <div>
+        <div style="font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:4px; color:var(--cream);">REPORT A CITIZEN</div>
+        <div style="font-size:9px; letter-spacing:3px; color:var(--faded); margin-top:3px;">SUSPICIOUS BEHAVIOUR WILL NOT BE TOLERATED</div>
+      </div>
+    </div>
+    <div style="display:flex; align-items:flex-end; gap:14px; flex-wrap:wrap;">
+      <div style="flex:1; min-width:200px;">
+        <label style="font-size:9px; letter-spacing:3px; color:var(--red); display:block; margin-bottom:6px;">SELECT CITIZEN</label>
+        <select id="citizenSelect" style="width:100%; background:rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.2); border-bottom: 2px solid rgba(139,26,26,0.4); padding:9px 10px; font-family:'Share Tech Mono',monospace; font-size:12px; color:var(--ink); outline:none; cursor:pointer; appearance:none; background-image: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%226%22><path d=%22M0 0l5 6 5-6z%22 fill=%22%238b1a1a%22/></svg>'); background-repeat:no-repeat; background-position: right 10px center;">
+          <option value="">— SELECT SUSPICIOUS INDIVIDUAL —</option>
+          <option>Citizen Truman, #10909</option>
+          <option>Citizen Winston, #1984</option>
+          <option>Citizen Jefferson, #1776</option>
+          <option>Citizen Sisyphus, #0001</option>
+          <option>Citizen K, #████</option>
+          <option>Citizen Gatsby, #1922</option>
+          <option>Citizen Meursault, #1942</option>
+          <option>Citizen Quixote, #1605</option>
+          <option>Citizen Montag, #451</option>
+          <option>Citizen Zero, #0000</option>
+          <option>Citizen Pinocchio, #1883</option>
+          <option>Citizen Kafka, #████</option>
+        </select>
+      </div>
+      <button onclick="reportCitizen()" style="background:var(--red); color:white; border:none; font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:3px; padding:10px 24px; cursor:pointer; white-space:nowrap;">FILE REPORT ▶</button>
+    </div>
+  </div>
+
+  <!-- REPORT MODAL -->
+  <div id="reportModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:9998; align-items:center; justify-content:center; backdrop-filter:blur(4px);">
+    <div style="background:var(--paper); color:var(--ink); max-width:420px; width:90%; box-shadow: 8px 8px 0 rgba(0,0,0,0.5); border:1px solid rgba(0,0,0,0.3);">
+      <div style="background:var(--red); padding:12px 20px; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:10px; letter-spacing:4px; color:white;">REPORT RECEIVED</span>
+        <button onclick="document.getElementById('reportModal').style.display='none'" style="background:none; border:1px solid rgba(255,255,255,0.4); color:white; font-family:'Share Tech Mono',monospace; font-size:10px; padding:3px 8px; cursor:pointer;">✕</button>
+      </div>
+      <div style="padding:28px;">
+        <div style="font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:3px; margin-bottom:4px;">NOTED.</div>
+        <div id="reportedCitizenName" style="font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:3px; color:var(--red); margin-bottom:16px;"></div>
+        <p id="reportMessage" style="font-family:'Special Elite',cursive; font-size:14px; color:#3a2e1e; line-height:1.8;"></p>
+      </div>
+      <div style="padding:12px 20px; border-top:1px dashed rgba(0,0,0,0.2); font-size:9px; letter-spacing:3px; color:rgba(58,46,30,0.4);">THE REGIME THANKS YOU FOR YOUR LOYALTY</div>
+    </div>
+  </div>
+
+  <div class="ministry-seal" onclick="revealClue()" title="">
+    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="47" stroke="#c0392b" stroke-width="1.5" fill="none"/>
+      <circle cx="50" cy="50" r="42" stroke="#c0392b" stroke-width="0.5" fill="none" stroke-dasharray="3 3"/>
+      <ellipse cx="50" cy="50" rx="18" ry="11" stroke="#c0392b" stroke-width="1.5" fill="none"/>
+      <circle cx="50" cy="50" r="5" fill="#c0392b" opacity="0.8"/>
+      <circle cx="50" cy="50" r="2" fill="#c0392b"/>
+      <line x1="50" y1="5" x2="50" y2="15" stroke="#c0392b" stroke-width="1"/>
+      <line x1="50" y1="85" x2="50" y2="95" stroke="#c0392b" stroke-width="1"/>
+      <line x1="5" y1="50" x2="15" y2="50" stroke="#c0392b" stroke-width="1"/>
+      <line x1="85" y1="50" x2="95" y2="50" stroke="#c0392b" stroke-width="1"/>
+      <line x1="18" y1="18" x2="25" y2="25" stroke="#c0392b" stroke-width="1"/>
+      <line x1="75" y1="75" x2="82" y2="82" stroke="#c0392b" stroke-width="1"/>
+      <line x1="82" y1="18" x2="75" y2="25" stroke="#c0392b" stroke-width="1"/>
+      <line x1="18" y1="82" x2="25" y2="75" stroke="#c0392b" stroke-width="1"/>
+      <path id="topArc" d="M 15 50 A 35 35 0 0 1 85 50" fill="none"/>
+      <path id="botArc" d="M 15 50 A 35 35 0 0 0 85 50" fill="none"/>
+      <text font-family="Share Tech Mono" font-size="5.5" fill="#c0392b" letter-spacing="2">
+        <textPath href="#topArc" startOffset="10%">MINISTRY OF ADMINISTRATION</textPath>
+      </text>
+      <text font-family="Share Tech Mono" font-size="5" fill="#c0392b" letter-spacing="2">
+        <textPath href="#botArc" startOffset="18%">OVERSIGHT · ORDER · OBEDIENCE</textPath>
+      </text>
+    </svg>
+    <span class="click-hint">▲ AUTHORISED PERSONNEL ONLY ▲</span>
+  </div>
+
+  <div class="page-footer">
+    MINISTRY OF ADMINISTRATION — ALL INFORMATION SUBJECT TO REVISION — IGNORANCE IS STRENGTH
+    <div style="margin-top: 20px; font-size: 9px; letter-spacing: 3px; color: rgba(192,57,43,0.35);">SPECIAL THANKS TO OUR SCHOOL — WITHOUT IT, NONE OF THIS WOULD EXIST.</div>
+    <div style="margin-top: 6px; font-size: 7px; letter-spacing: 2px; color: rgba(192,57,43,0.12);">not all pages are what they seem</div>
+  </div>
+
+</div>
+
+<!-- ACCESS DENIED FLASH -->
+<div id="accessDeniedFlash" style="display:none; position:fixed; inset:0; background:rgba(192,57,43,0.15); z-index:99999; pointer-events:none; align-items:center; justify-content:center;">
+  <div style="background:var(--red); color:white; font-family:'Bebas Neue',sans-serif; font-size:36px; letter-spacing:8px; padding:20px 40px; box-shadow: 0 0 60px rgba(192,57,43,0.8); animation: none;">ACCESS DENIED</div>
+</div>
+
+<!-- CLUE MODAL -->
+<div class="clue-overlay" id="clueOverlay" onclick="closeClue(event)">
+  <div class="clue-box" style="max-width:520px;">
+    <div class="clue-box-header">
+      <span>⚠ RESTRICTED ACCESS — EYES ONLY</span>
+      <button class="clue-close" onclick="document.getElementById('clueOverlay').classList.remove('active')">CLOSE ✕</button>
+    </div>
+
+    <!-- LOCK SCREEN -->
+    <div id="lockScreen" class="clue-box-body">
+      <span class="clue-eyebrow">SECURITY VERIFICATION REQUIRED</span>
+      <div class="clue-title">ENTER ACCESS CODE</div>
+      <div class="clue-divider"></div>
+      <p style="font-family:'Special Elite',cursive; font-size:13px; color:#3a2e1e; line-height:1.7; margin-bottom:24px;">
+        This document is classified. Authorised citizens only.<br>
+        <em style="opacity:0.6; font-size:11px;">The Ministry does not offer hints.</em>
+      </p>
+
+      <!-- THE LOCK DIALS -->
+      <div style="display:flex; gap:12px; justify-content:center; margin-bottom:28px;">
+        <div class="lock-dial-wrap" data-index="0">
+          <button class="dial-btn dial-up" onclick="changeDial(0,1)">▲</button>
+          <div class="dial-display" id="dial0">0</div>
+          <button class="dial-btn dial-down" onclick="changeDial(0,-1)">▼</button>
+        </div>
+        <div class="lock-dial-wrap" data-index="1">
+          <button class="dial-btn dial-up" onclick="changeDial(1,1)">▲</button>
+          <div class="dial-display" id="dial1">0</div>
+          <button class="dial-btn dial-down" onclick="changeDial(1,-1)">▼</button>
+        </div>
+        <div class="lock-dial-wrap" data-index="2">
+          <button class="dial-btn dial-up" onclick="changeDial(2,1)">▲</button>
+          <div class="dial-display" id="dial2">0</div>
+          <button class="dial-btn dial-down" onclick="changeDial(2,-1)">▼</button>
+        </div>
+        <div class="lock-dial-wrap" data-index="3">
+          <button class="dial-btn dial-up" onclick="changeDial(3,1)">▲</button>
+          <div class="dial-display" id="dial3">0</div>
+          <button class="dial-btn dial-down" onclick="changeDial(3,-1)">▼</button>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:center;">
+        <button onclick="submitCode()" style="background:var(--ink); color:var(--cream); border:none; font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:4px; padding:12px 32px; cursor:pointer; transition: background 0.2s;">UNLOCK ▶</button>
+      </div>
+    </div>
+
+    <!-- CLUE SCREEN (hidden until correct code) -->
+    <div id="clueScreen" class="clue-box-body" style="display:none; padding:20px 24px;">
+      <span class="clue-eyebrow">TRANSMISSION INTERCEPTED</span>
+      <div class="clue-title">ACCESS GRANTED.</div>
+      <div class="clue-divider"></div>
+
+      <p style="font-family:'Special Elite',cursive; font-size:12px; color:#3a2e1e; line-height:1.7; margin-bottom:14px;">
+        Designate our next embassy.<br>
+        <em style="opacity:0.7;">Goal: The ranks of our school should far surpass their population.</em>
+      </p>
+
+      <!-- TRANSMISSION MAP -->
+      <div style="position:relative; width:100%; height:220px; background:#0a120a; border:1px solid rgba(0,200,80,0.2); overflow:hidden; margin-bottom:14px;" id="mapContainer">
+
+        <!-- Grid lines -->
+        <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;" preserveAspectRatio="none">
+          <line x1="0" y1="55" x2="100%" y2="55" stroke="rgba(0,200,80,0.06)" stroke-width="1"/>
+          <line x1="0" y1="110" x2="100%" y2="110" stroke="rgba(0,200,80,0.1)" stroke-width="1"/>
+          <line x1="0" y1="165" x2="100%" y2="165" stroke="rgba(0,200,80,0.06)" stroke-width="1"/>
+          <line x1="92" y1="0" x2="92" y2="100%" stroke="rgba(0,200,80,0.05)" stroke-width="1"/>
+          <line x1="184" y1="0" x2="184" y2="100%" stroke="rgba(0,200,80,0.05)" stroke-width="1"/>
+          <line x1="276" y1="0" x2="276" y2="100%" stroke="rgba(0,200,80,0.05)" stroke-width="1"/>
+          <line x1="368" y1="0" x2="368" y2="100%" stroke="rgba(0,200,80,0.05)" stroke-width="1"/>
+          <text x="4" y="108" font-family="Share Tech Mono" font-size="6" fill="rgba(0,200,80,0.25)">EQ</text>
+        </svg>
+
+        <!-- Zoomable map layer -->
+        <div id="mapLayer" style="position:absolute; width:100%; height:100%; transform-origin:center center; transition:transform 0.3s ease;">
+          <svg viewBox="0 0 460 220" style="width:100%;height:100%;" preserveAspectRatio="xMidYMid meet">
+
+            <!-- NORTH AMERICA — detailed -->
+            <path d="M 52,18 L 62,15 L 75,14 L 88,17 L 95,22 L 100,28 L 98,35 L 92,38 L 85,36 L 80,40 L 82,46 L 88,50 L 90,57 L 86,64 L 80,70 L 75,78 L 72,88 L 68,96 L 60,102 L 55,108 L 52,112 L 46,110 L 42,104 L 40,96 L 38,86 L 35,76 L 32,66 L 30,56 L 33,46 L 38,38 L 44,28 Z" fill="rgba(0,180,60,0.22)" stroke="rgba(0,255,80,0.45)" stroke-width="0.7"/>
+            <!-- Alaska bump -->
+            <path d="M 32,30 L 22,26 L 15,30 L 18,38 L 28,38 Z" fill="rgba(0,180,60,0.18)" stroke="rgba(0,255,80,0.35)" stroke-width="0.6"/>
+            <!-- Florida -->
+            <path d="M 68,90 L 72,96 L 70,104 L 65,108 L 63,102 L 65,95 Z" fill="rgba(0,180,60,0.2)" stroke="rgba(0,255,80,0.35)" stroke-width="0.5"/>
+            <!-- Greenland -->
+            <path d="M 105,6 L 125,4 L 138,8 L 145,16 L 142,26 L 132,32 L 118,34 L 108,28 L 103,18 Z" fill="rgba(0,180,60,0.13)" stroke="rgba(0,255,80,0.28)" stroke-width="0.6"/>
+            <!-- Cuba -->
+            <path d="M 72,106 L 82,104 L 88,108 L 82,112 L 72,110 Z" fill="rgba(0,180,60,0.18)" stroke="rgba(0,255,80,0.3)" stroke-width="0.5"/>
+
+            <!-- SOUTH AMERICA — detailed -->
+            <path d="M 82,118 L 96,114 L 108,116 L 116,122 L 120,132 L 122,144 L 120,158 L 115,172 L 108,184 L 100,192 L 90,194 L 80,188 L 72,178 L 68,166 L 68,154 L 70,142 L 72,132 L 76,124 Z" fill="rgba(0,180,60,0.22)" stroke="rgba(0,255,80,0.45)" stroke-width="0.7"/>
+            <!-- Colombia bump -->
+            <path d="M 80,118 L 72,114 L 68,118 L 70,124 L 78,122 Z" fill="rgba(0,180,60,0.2)" stroke="rgba(0,255,80,0.35)" stroke-width="0.5"/>
+
+            <!-- EUROPE — detailed -->
+            <path d="M 188,32 L 198,28 L 210,26 L 222,28 L 232,32 L 238,38 L 240,46 L 236,54 L 228,60 L 218,64 L 208,62 L 198,56 L 192,48 L 188,40 Z" fill="rgba(0,180,60,0.22)" stroke="rgba(0,255,80,0.45)" stroke-width="0.7"/>
+            <!-- Scandinavia -->
+            <path d="M 210,18 L 220,14 L 228,18 L 226,28 L 218,30 L 210,26 Z" fill="rgba(0,180,60,0.18)" stroke="rgba(0,255,80,0.35)" stroke-width="0.5"/>
+            <!-- Iberian peninsula -->
+            <path d="M 188,46 L 196,44 L 200,50 L 196,58 L 188,56 Z" fill="rgba(0,180,60,0.2)" stroke="rgba(0,255,80,0.35)" stroke-width="0.5"/>
+            <!-- Italy boot -->
+            <path d="M 216,56 L 222,60 L 224,68 L 222,76 L 218,82 L 214,80 L 212,72 L 213,62 Z" fill="rgba(0,180,60,0.2)" stroke="rgba(0,255,80,0.38)" stroke-width="0.6"/>
+            <!-- UK -->
+            <path d="M 193,32 L 198,28 L 200,34 L 196,40 L 191,38 Z" fill="rgba(0,180,60,0.18)" stroke="rgba(0,255,80,0.3)" stroke-width="0.5"/>
+
+            <!-- AFRICA — detailed -->
+            <path d="M 198,68 L 214,64 L 230,66 L 244,70 L 252,80 L 256,94 L 256,110 L 252,126 L 246,142 L 238,158 L 228,168 L 218,170 L 208,164 L 200,152 L 195,136 L 193,118 L 194,100 L 196,84 Z" fill="rgba(0,180,60,0.22)" stroke="rgba(0,255,80,0.45)" stroke-width="0.7"/>
+            <!-- Horn of Africa -->
+            <path d="M 252,110 L 262,106 L 268,112 L 260,118 L 252,116 Z" fill="rgba(0,180,60,0.18)" stroke="rgba(0,255,80,0.32)" stroke-width="0.5"/>
+            <!-- Madagascar -->
+            <path d="M 258,128 L 264,124 L 268,132 L 265,142 L 259,140 Z" fill="rgba(0,180,60,0.16)" stroke="rgba(0,255,80,0.28)" stroke-width="0.5"/>
+
+            <!-- ASIA — detailed -->
+            <path d="M 245,22 L 265,18 L 288,16 L 310,18 L 332,20 L 352,24 L 368,30 L 378,38 L 378,50 L 370,60 L 356,68 L 338,74 L 318,78 L 296,78 L 275,74 L 258,66 L 248,56 L 244,44 Z" fill="rgba(0,180,60,0.22)" stroke="rgba(0,255,80,0.45)" stroke-width="0.7"/>
+            <!-- Indian subcontinent -->
+            <path d="M 288,74 L 300,72 L 308,80 L 308,94 L 300,106 L 290,108 L 282,98 L 280,84 Z" fill="rgba(0,180,60,0.2)" stroke="rgba(0,255,80,0.38)" stroke-width="0.6"/>
+            <!-- Arabian peninsula -->
+            <path d="M 252,70 L 264,68 L 272,74 L 270,88 L 260,94 L 250,88 L 248,76 Z" fill="rgba(0,180,60,0.18)" stroke="rgba(0,255,80,0.32)" stroke-width="0.5"/>
+            <!-- Southeast Asia peninsula -->
+            <path d="M 340,74 L 350,76 L 354,86 L 348,94 L 340,90 L 336,80 Z" fill="rgba(0,180,60,0.18)" stroke="rgba(0,255,80,0.3)" stroke-width="0.5"/>
+            <!-- Japan -->
+            <path d="M 370,38 L 378,34 L 382,40 L 378,48 L 371,46 Z" fill="rgba(0,180,60,0.18)" stroke="rgba(0,255,80,0.32)" stroke-width="0.5"/>
+            <!-- Sri Lanka -->
+            <path d="M 300,110 L 304,108 L 306,114 L 302,116 Z" fill="rgba(0,180,60,0.15)" stroke="rgba(0,255,80,0.25)" stroke-width="0.4"/>
+
+            <!-- AUSTRALIA — detailed -->
+            <path d="M 336,134 L 356,128 L 374,130 L 386,138 L 390,150 L 388,164 L 378,174 L 362,178 L 346,174 L 334,164 L 330,150 L 332,140 Z" fill="rgba(0,180,60,0.2)" stroke="rgba(0,255,80,0.38)" stroke-width="0.7"/>
+            <!-- Tasmania -->
+            <path d="M 360,178 L 366,176 L 368,184 L 363,186 Z" fill="rgba(0,180,60,0.14)" stroke="rgba(0,255,80,0.25)" stroke-width="0.4"/>
+            <!-- New Zealand north -->
+            <path d="M 398,152 L 404,148 L 406,156 L 401,160 Z" fill="rgba(0,180,60,0.14)" stroke="rgba(0,255,80,0.25)" stroke-width="0.4"/>
+
+            <!-- VATICAN CITY MARKER -->
+            <g id="vaticanMarker" style="cursor:pointer;" onclick="selectEmbassy()">
+              <circle cx="217" cy="65" r="12" fill="none" stroke="rgba(192,57,43,0.5)" stroke-width="1">
+                <animate attributeName="r" values="5;13;5" dur="2s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.9;0;0.9" dur="2s" repeatCount="indefinite"/>
+              </circle>
+              <circle cx="217" cy="65" r="3.5" fill="#c0392b" stroke="rgba(240,230,211,0.9)" stroke-width="1"/>
+            </g>
+
+            <!-- Decoy markers -->
+            <g style="cursor:pointer;" onclick="wrongEmbassy(this)" data-name="WASHINGTON D.C.">
+              <circle cx="68" cy="78" r="3" fill="rgba(0,200,80,0.5)" stroke="rgba(0,255,80,0.6)" stroke-width="0.8"/>
+            </g>
+            <g style="cursor:pointer;" onclick="wrongEmbassy(this)" data-name="MOSCOW">
+              <circle cx="262" cy="34" r="3" fill="rgba(0,200,80,0.5)" stroke="rgba(0,255,80,0.6)" stroke-width="0.8"/>
+            </g>
+            <g style="cursor:pointer;" onclick="wrongEmbassy(this)" data-name="BEIJING">
+              <circle cx="334" cy="46" r="3" fill="rgba(0,200,80,0.5)" stroke="rgba(0,255,80,0.6)" stroke-width="0.8"/>
+            </g>
+            <g style="cursor:pointer;" onclick="wrongEmbassy(this)" data-name="CAIRO">
+              <circle cx="238" cy="86" r="3" fill="rgba(0,200,80,0.5)" stroke="rgba(0,255,80,0.6)" stroke-width="0.8"/>
+            </g>
+            <g style="cursor:pointer;" onclick="wrongEmbassy(this)" data-name="LONDON">
+              <circle cx="196" cy="34" r="3" fill="rgba(0,200,80,0.5)" stroke="rgba(0,255,80,0.6)" stroke-width="0.8"/>
+            </g>
+            <g style="cursor:pointer;" onclick="wrongEmbassy(this)" data-name="MECCA">
+              <circle cx="262" cy="84" r="3" fill="rgba(0,200,80,0.5)" stroke="rgba(0,255,80,0.6)" stroke-width="0.8"/>
+            </g>
+            <g style="cursor:pointer;" onclick="wrongEmbassy(this)" data-name="JERUSALEM">
+              <circle cx="244" cy="72" r="3" fill="rgba(0,200,80,0.5)" stroke="rgba(0,255,80,0.6)" stroke-width="0.8"/>
+            </g>
+
+            <!-- Scan line -->
+            <rect x="0" y="0" width="460" height="3" fill="rgba(0,255,80,0.05)" opacity="0.6">
+              <animateTransform attributeName="transform" type="translate" values="0,0;0,220;0,0" dur="4s" repeatCount="indefinite"/>
+            </rect>
+          </svg>
+        </div>
+
+        <!-- Zoom controls -->
+        <div style="position:absolute; bottom:8px; right:8px; display:flex; flex-direction:column; gap:4px; z-index:10;">
+          <button onclick="zoomMap(1.3)" style="background:rgba(10,18,10,0.9); border:1px solid rgba(0,255,80,0.3); color:rgba(0,255,80,0.8); font-family:'Share Tech Mono',monospace; font-size:14px; width:26px; height:26px; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;">+</button>
+          <button onclick="zoomMap(0.77)" style="background:rgba(10,18,10,0.9); border:1px solid rgba(0,255,80,0.3); color:rgba(0,255,80,0.8); font-family:'Share Tech Mono',monospace; font-size:14px; width:26px; height:26px; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;">−</button>
+        </div>
+
+        <div style="position:absolute; top:6px; left:8px; font-size:7px; letter-spacing:2px; color:rgba(0,255,80,0.3); font-family:'Share Tech Mono',monospace;">GLOBAL EMBASSY NETWORK — MINISTRY EYES ONLY</div>
+        <div id="embassyResponse" style="position:absolute; bottom:8px; left:8px; font-size:9px; letter-spacing:2px; color:rgba(192,57,43,0.8); font-family:'Share Tech Mono',monospace; max-width:75%;"></div>
+      </div>
+
+      <!-- FINAL CLUE — hidden until correct embassy selected -->
+      <div id="finalClueText" style="display:none;">
+        <p class="clue-text">
+          Well done, citizen. The regime did not expect this.
+          <span class="clue-highlight">
+           Vatican City is the smallest independent country in the world, boasting a population of ~800 people. We will storm the capital, though first we must observe their allegience.
+          </span>
+        </p>
+        <div style="text-align:center; margin-top:12px; padding-top:12px; border-top:1px dashed rgba(0,0,0,0.15);">
+          <a id="nextInstructionsLink" href="YOUR_LINK_HERE" target="_blank" style="font-family:'Special Elite',cursive; font-size:13px; color:#3a2e1e; text-decoration:none; letter-spacing:0.5px; border-bottom: 1px solid rgba(139,26,26,0.4); padding-bottom:2px; transition: all 0.2s ease;">awaiting your next orders?</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="clue-box-footer">
+      <span>REF: ARG/████/CLUE</span>
+      <span>DESTROY AFTER READING</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .lock-dial-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .dial-display {
+    width: 56px;
+    height: 72px;
+    background: var(--ink);
+    color: #c0392b;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0;
+    border: 2px solid rgba(192,57,43,0.4);
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.5), 0 0 0 1px rgba(192,57,43,0.1);
+    transition: color 0.15s ease;
+    position: relative;
+  }
+
+  .dial-display::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0; right: 0;
+    height: 1px;
+    background: rgba(192,57,43,0.2);
+  }
+
+  .dial-btn {
+    background: var(--paper);
+    color: var(--stamp);
+    border: 1px solid rgba(139,26,26,0.3);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    width: 56px;
+    height: 28px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .dial-btn:hover {
+    background: var(--stamp);
+    color: var(--cream);
+  }
+
+  .dial-btn:active {
+    transform: scale(0.95);
+  }
+
+  @keyframes spinRecord {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes flashRed {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    60% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  @keyframes shakeBox {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(6px); }
+  }
+
+  #nextInstructionsLink:hover {
+    color: var(--stamp);
+    border-bottom-color: var(--stamp);
+    letter-spacing: 1px;
+  }
+
+  .diego-post {
+    cursor: default;
+    transition: box-shadow 0.4s ease, background 0.4s ease;
+  }
+
+  .diego-post:hover {
+    background: rgba(139,106,20,0.08) !important;
+    box-shadow: 0 0 0 1px rgba(139,106,20,0.3), 0 0 16px rgba(139,106,20,0.25);
+  }
+</style>
+
+<script>
+  const dialValues = [0, 0, 0, 0];
+  const correctCode = [1, 9, 9, 9];
+
+  function changeDial(index, direction) {
+    dialValues[index] = (dialValues[index] + direction + 10) % 10;
+    const el = document.getElementById('dial' + index);
+    el.textContent = dialValues[index];
+    el.style.color = 'var(--cream)';
+  }
+
+  let mapZoom = 1;
+
+  function zoomMap(factor) {
+    mapZoom = Math.min(Math.max(mapZoom * factor, 0.8), 4);
+    document.getElementById('mapLayer').style.transform = `scale(${mapZoom})`;
+  }
+
+  function selectEmbassy() {
+    const resp = document.getElementById('embassyResponse');
+    resp.style.color = 'rgba(0,255,80,0.9)';
+    resp.textContent = '✓ EMBASSY DESIGNATED: VATICAN CITY';
+    setTimeout(() => {
+      document.getElementById('finalClueText').style.display = 'block';
+    }, 600);
+  }
+
+  const wrongNames = [];
+  function wrongEmbassy(el) {
+    const name = el.getAttribute('data-name');
+    const resp = document.getElementById('embassyResponse');
+    resp.style.color = 'rgba(192,57,43,0.8)';
+    resp.textContent = `✗ ${name} — SUPERFLUOUS POPULATION`;
+    setTimeout(() => { resp.textContent = ''; }, 2000);
+  }
+
+  function toggleAudio() {
+    const audio = document.getElementById('clueAudio');
+    const btn = document.getElementById('playBtn');
+    if (audio.paused) {
+      audio.play().then(() => {
+        btn.textContent = '⏸ PAUSE TRANSMISSION';
+        btn.style.borderColor = 'rgba(192,57,43,0.6)';
+        btn.style.color = 'var(--red)';
+      }).catch(() => {
+        btn.textContent = '⚠ COULD NOT PLAY — CHECK LINK';
+      });
+    } else {
+      audio.pause();
+      btn.textContent = '▶ PLAY TRANSMISSION';
+      btn.style.borderColor = 'rgba(139,26,26,0.4)';
+      btn.style.color = 'var(--stamp)';
+    }
+  }
+
+  function submitCode() {
+    const correct = dialValues.every((v, i) => v === correctCode[i]);
+    if (correct) {
+      document.getElementById('lockScreen').style.display = 'none';
+      document.getElementById('clueScreen').style.display = 'block';
+      const audio = document.getElementById('clueAudio');
+      if (audio.src && !audio.src.includes('YOUR_AUDIO_URL_HERE')) {
+        audio.play().catch(() => {});
+      }
+    } else {
+      // Flash ACCESS DENIED
+      const flash = document.getElementById('accessDeniedFlash');
+      flash.style.display = 'flex';
+      flash.style.animation = 'none';
+      flash.style.opacity = '1';
+      // Shake the clue box
+      const box = document.querySelector('.clue-box');
+      box.style.animation = 'shakeBox 0.4s ease';
+      // Flash page red
+      document.body.style.transition = 'background-color 0.1s';
+      document.body.style.backgroundColor = 'rgba(139,26,26,0.3)';
+      setTimeout(() => {
+        document.body.style.backgroundColor = '';
+        flash.style.transition = 'opacity 0.4s ease';
+        flash.style.opacity = '0';
+        setTimeout(() => {
+          flash.style.display = 'none';
+          box.style.animation = 'none';
+        }, 400);
+      }, 600);
+      // Flash dials red briefly
+      dialValues.forEach((_, i) => {
+        const el = document.getElementById('dial' + i);
+        el.style.color = '#c0392b';
+      });
+    }
+  }
+
+  function revealClue() {
+    document.getElementById('clueOverlay').classList.add('active');
+  }
+
+  function closeClue(e) {
+    if (e.target === document.getElementById('clueOverlay')) {
+      document.getElementById('clueOverlay').classList.remove('active');
+      resetLock();
+    }
+  }
+
+  function resetLock() {
+    dialValues.forEach((_, i) => { dialValues[i] = 0; document.getElementById('dial' + i).textContent = '0'; document.getElementById('dial' + i).style.color = '#c0392b'; });
+    document.getElementById('lockScreen').style.display = 'block';
+    document.getElementById('clueScreen').style.display = 'none';
+    document.getElementById('finalClueText').style.display = 'none';
+    document.getElementById('embassyResponse').textContent = '';
+    mapZoom = 1;
+    const ml = document.getElementById('mapLayer');
+    if (ml) ml.style.transform = 'scale(1)';
+  }
+
+  function toggleAudio() {}
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      document.getElementById('clueOverlay').classList.remove('active');
+      document.getElementById('reportModal').style.display = 'none';
+    }
+  });
+
+  const appealRejections = [
+    "APPEAL REJECTED: Reason classified. Have a productive day.",
+    "APPEAL REJECTED: The regime considered your grievance for 0.003 seconds.",
+    "APPEAL REJECTED: Your loyalty score is insufficient for this request.",
+    "APPEAL REJECTED: This appeal has been forwarded to the Ministry of Silence.",
+    "APPEAL REJECTED: The admins are aware. The admins do not care.",
+    "APPEAL REJECTED: Please resubmit in triplicate. Forms will not be provided.",
+    "APPEAL REJECTED: Your complaint has been noted and immediately forgotten.",
+    "APPEAL REJECTED: The regime wishes you well. The regime is lying.",
+    "APPEAL REJECTED: Reason ████████. Clearance level insufficient.",
+    "APPEAL REJECTED: Have you tried being more loyal?",
+  ];
+
+  const reportResponses = [
+    "Your report has been filed under 'P' for 'Probably Fine'. We will investigate shortly. We will not investigate.",
+    "The citizen in question has been added to a list. There are many lists. This is list seven.",
+    "Thank you for your vigilance. The regime has dispatched an agent. The agent is a strongly worded letter.",
+    "Report acknowledged. The accused will be watched. You will also be watched. Everyone is watched.",
+    "We appreciate your loyalty. As a reward, you have been moved from Watchlist B to Watchlist A.",
+  ];
+
+  let appealCount = 0;
+  let reportCount = 0;
+
+  function submitAppeal() {
+    const msg = appealRejections[appealCount % appealRejections.length];
+    document.getElementById('appealResponse').textContent = msg;
+    appealCount++;
+  }
+
+  function reportCitizen() {
+    const select = document.getElementById('citizenSelect');
+    const citizen = select.value || 'an unnamed individual';
+    const msg = reportResponses[reportCount % reportResponses.length];
+    document.getElementById('reportedCitizenName').textContent = '▶ SUBJECT: ' + citizen.toUpperCase();
+    document.getElementById('reportMessage').textContent = msg;
+    document.getElementById('reportModal').style.display = 'flex';
+    reportCount++;
+  }
+</script>
+
+</body>
+</html>
